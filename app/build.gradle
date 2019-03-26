@@ -28,6 +28,10 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
   }
+  lintOptions {
+    abortOnError false
+    lintConfig file("${rootDir.absolutePath}/lint/lint.xml")
+  }
 }
 
 dependencies {
