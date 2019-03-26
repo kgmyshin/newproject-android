@@ -35,6 +35,17 @@ jobs:
         destination: reports
     - store_test_results:
         path: app/build/test-results
+    - restore_cache:
+        name: Restore bundle cache
+        key: gems-{{ checksum "Gemfile.lock" }}
+    - run:
+        name: Run bundle install
+        command: bundle install --path vendor/bundle
+    - save_cache:
+        name: Store bundle cache
+        key: gems-{{ checksum "Gemfile.lock" }}
+        paths:
+        - vendor/bundle
     - persist_to_workspace:
         root: .
         paths:
