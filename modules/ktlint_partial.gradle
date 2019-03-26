@@ -1,0 +1,8 @@
+apply plugin: "org.jmailen.kotlinter"
+
+kotlinter {
+  ignoreFailures = true
+  reporters = ['checkstyle', 'plain']
+  indentSize = 2
+  continuationIndentSize = 2
+}
