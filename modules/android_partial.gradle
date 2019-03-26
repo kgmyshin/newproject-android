@@ -1,0 +1,57 @@
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs'
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+    targetSdkVersion versions.targetSdk
+    versionCode versions.code
+    versionName versions.name
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    multiDexEnabled true
+    vectorDrawables.useSupportLibrary = true
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), file("${rootDir.absolutePath}/modules/proguard-rules.pro")
+    }
+  }
+
+  lintOptions {
+    abortOnError false
+    checkTestSources true
+  }
+  dataBinding {
+    enabled = true
+  }
+  packagingOptions {
+    exclude 'META-INF/LICENSE.md'
+    exclude 'META-INF/main.kotlin_module'
+    exclude 'META-INF/LICENSE-notice.md'
+  }
+}
+
+dependencies {
+  implementation deps.kotlin.core
+
+  implementation deps.androidx.appcompat
+  implementation deps.androidx.constraintlayout
+  implementation deps.androidx.lifecycle
+  implementation deps.androidx.recyclerview
+  implementation deps.material
+
+  implementation deps.androidx.corektx
+  implementation deps.androidx.fragmentktx
+  implementation deps.androidx.collectionktx
+  implementation deps.androidx.viewmodelktx
+  implementation deps.androidx.livedataktx
+
+  implementation deps.coroutine.core
+  implementation deps.coroutine.android
+}

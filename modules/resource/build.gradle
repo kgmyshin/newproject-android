@@ -1,0 +1,8 @@
+apply plugin: 'com.android.library'
+
+apply from: "${rootDir.absolutePath}/modules/android_partial.gradle"
+
+dependencies {
+}
+
+apply from: "${rootDir.absolutePath}/modules/ktlint_partial.gradle"
