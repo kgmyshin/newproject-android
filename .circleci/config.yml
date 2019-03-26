@@ -52,7 +52,7 @@ workflows:
   build:
     jobs:
     - build
-    - deploy:
+    - deploy_debug:
         requires:
         - build
         filters:
