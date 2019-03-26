@@ -1,11 +1,15 @@
-version: 2
-jobs:
-  build:
+version: 2.1
+
+executors:
+  android-executor:
     working_directory: ~/code
     docker:
     - image: circleci/android:api-28
     environment:
       JVM_OPTS: -Xmx3200m
+
+commands:
+  prepare:
     steps:
     - checkout
     - restore_cache:
@@ -17,6 +21,12 @@ jobs:
         paths:
         - ~/.gradle
         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+
+jobs:
+  build:
+    executor: android-executor
+    steps:
+    - prepare
     - run:
         name: Run Tests
         command: ./gradlew lint test
@@ -25,3 +35,37 @@ jobs:
         destination: reports
     - store_test_results:
         path: app/build/test-results
+    - persist_to_workspace:
+        root: .
+        paths:
+        - .
+
+  deploy_debug:
+    executor: android-executor
+    steps:
+    - attach_workspace:
+        at: .
+    - run:
+        name: Assemble Debug
+        command: ./gradlew assembleDebug
+    - run: |
+        GIT_HASH=$(git rev-parse --short HEAD)
+        GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+        curl \
+        -F "token=$DEPLOY_GATE_API_KEY" \
+        -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
+        -F "message=git:$GIT_HASH" \
+        -F "distribution_name=$GIT_BRANCH" \
+        https://deploygate.com/api/users/kgmyshin/apps
+
+workflows:
+  version: 2.1
+  build:
+    jobs:
+    - build
+    - deploy_debug:
+        requires:
+        - build
+        filters:
+          branches:
+            only: master
