@@ -46,6 +46,9 @@ jobs:
         key: gems-{{ checksum "Gemfile.lock" }}
         paths:
         - vendor/bundle
+    - run:
+        name: Run Danger
+        command: bundle exec danger
     - persist_to_workspace:
         root: .
         paths:
